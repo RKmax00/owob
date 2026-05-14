@@ -1,5 +1,7 @@
-from flask import Flask, redirect
+from flask import Flask, send_file
+import requests
 import itertools
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -14,7 +16,14 @@ images = itertools.cycle([
 
 @app.route("/")
 def rotate():
-    return redirect(next(images), code=302)
+    url = next(images)
+
+    response = requests.get(url)
+
+    return send_file(
+        BytesIO(response.content),
+        mimetype="image/gif"
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

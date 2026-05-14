@@ -1,29 +1,27 @@
-from flask import Flask, send_file
-import requests
-import itertools
-from io import BytesIO
+from flask import Flask, redirect
 
 app = Flask(__name__)
 
-images = itertools.cycle([
+images = [
     "https://files.catbox.moe/c0asdk.gif",
     "https://files.catbox.moe/85wmoy.gif",
     "https://files.catbox.moe/348isi.gif",
     "https://files.catbox.moe/looo1r.gif",
     "https://files.catbox.moe/ac041w.gif",
     "https://files.catbox.moe/ux1syg.gif"
-])
+]
+
+counter = 0
 
 @app.route("/")
 def rotate():
-    url = next(images)
+    global counter
 
-    response = requests.get(url)
+    url = images[counter]
 
-    return send_file(
-        BytesIO(response.content),
-        mimetype="image/gif"
-    )
+    counter = (counter + 1) % len(images)
+
+    return redirect(url)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

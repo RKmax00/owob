@@ -4,9 +4,9 @@ import time
 app = Flask(__name__)
 
 images = [
-    "https://static.wikia.nocookie.net/owobot/images/4/42/Great_Sword.png/revision/latest?cb=20191128112429",
+    "https://cdn.discordapp.com/emojis/572620163434676265.png",
 
-    "https://static.wikia.nocookie.net/owobot/images/7/77/Defender%27s_Aegis.png/revision/latest?cb=20191128112427"
+    "https://cdn.discordapp.com/emojis/538196865410138125.png"
 ]
 
 @app.route("/")

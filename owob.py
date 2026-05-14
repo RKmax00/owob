@@ -1,28 +1,27 @@
-from flask import Flask, send_file
-import itertools
-import os
+from flask import Flask, redirect
 
 app = Flask(__name__)
 
-gif_cycle = itertools.cycle([
-    "1.gif",
-    "2.gif",
-    "3.gif",
-    "4.gif",
-    "5.gif",
-    "6.gif",
-])
+images = [
+    "https://files.catbox.moe/c0asdk.gif",
+    "https://files.catbox.moe/85wmoy.gif",
+    "https://files.catbox.moe/348isi.gif",
+    "https://files.catbox.moe/looo1r.gif",
+    "https://files.catbox.moe/ac041w.gif",
+    "https://files.catbox.moe/ux1syg.gif"
+]
 
-@app.route("/battle.gif")
-def battle_gif():
-    gif = next(gif_cycle)
-    path = os.path.join("gifs", gif)
+counter = 0
 
-    return send_file(
-        path,
-        mimetype="image/gif",
-        cache_timeout=0
-    )
+@app.route("/")
+def rotate():
+    global counter
+
+    url = images[counter]
+
+    counter = (counter + 1) % len(images)
+
+    return redirect(url)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

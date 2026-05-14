@@ -1,4 +1,4 @@
-from flask import Flask, redirect, request
+from flask import Flask, redirect
 import time
 
 app = Flask(__name__)
@@ -17,17 +17,12 @@ images = [
     "https://media.discordapp.net/attachments/1469338751296733378/1504449534896640060/download.gif?ex=6a070750&is=6a05b5d0&hm=ed5e12987e0917f3dc29dee61359405e2bc47da8a9575e7f8b7b7957fb704dbd&=&width=625&height=465"
 ]
 
-counter = 0
-
 @app.route("/")
 def rotate():
-    global counter
 
-    url = images[counter]
+    current = int(time.time() // 14) % len(images)
 
-    counter = (counter + 1) % len(images)
-
-    return redirect(f"{url}&t={time.time()}")
+    return redirect(images[current], code=302)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

@@ -1,24 +1,42 @@
-from flask import Flask, redirect
+from flask import Flask, send_from_directory
+import threading
 import time
-import random
+import shutil
 
 app = Flask(__name__)
 
-images = [
-    "https://static.wikia.nocookie.net/owobot/images/4/42/Great_Sword.png/revision/latest?cb=20191128112429",
-    "https://static.wikia.nocookie.net/owobot/images/7/77/Defender%27s_Aegis.png/revision/latest?cb=20191128112427"
+gifs = [
+    "static/1.gif",
+    "static/2.gif",
+    "static/3.gif",
+    "static/4.gif"
 ]
 
+current = 0
+
+def rotate_gifs():
+    global current
+
+    while True:
+        shutil.copyfile(
+            gifs[current],
+            "static/current.gif"
+        )
+
+        current = (current + 1) % len(gifs)
+
+        time.sleep(14)
+
+threading.Thread(
+    target=rotate_gifs,
+    daemon=True
+).start()
+
 @app.route("/")
-def rotate():
-
-    current = int(time.time() // 14) % len(images)
-
-    unique = random.randint(100000, 999999)
-
-    return redirect(
-        f"{images[current]}&dynamic={unique}",
-        code=302
+def serve_gif():
+    return send_from_directory(
+        "static",
+        "current.gif"
     )
 
 if __name__ == "__main__":

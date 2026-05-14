@@ -1,4 +1,5 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, request
+import time
 
 app = Flask(__name__)
 
@@ -26,7 +27,7 @@ def rotate():
 
     counter = (counter + 1) % len(images)
 
-    return redirect(url)
+    return redirect(f"{url}&t={time.time()}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

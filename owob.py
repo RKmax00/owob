@@ -1,9 +1,10 @@
-from flask import Flask, redirect
-import time
+from flask import Flask, Response
+import requests
+import itertools
 
 app = Flask(__name__)
 
-images = [
+images = itertools.cycle([
     "https://cdn.discordapp.com/attachments/1469338751296733378/1504449534896640060/download.gif",
     
     "https://cdn.discordapp.com/attachments/1469338751296733378/1504449534036541521/posted_by_ernoticon_on_Tumblr.gif",
@@ -15,19 +16,18 @@ images = [
     "https://cdn.discordapp.com/attachments/1469338751296733378/1504449532388311090/Not_sure_where_this_is_from_but_I_find_it_calming_and_pleasing_to_look_at___.gif",
     
     "https://cdn.discordapp.com/attachments/1469338751296733378/1504449531834794115/beyond_the_other_side.gif"
-]
-
-current_index = 0
+])
 
 @app.route("/")
 def rotate_image():
-    global current_index
+    url = next(images)
 
-    image = images[current_index]
+    r = requests.get(url)
 
-    current_index = (current_index + 1) % len(images)
-
-    return redirect(f"{image}?t={time.time()}", code=302)
+    return Response(
+        r.content,
+        content_type=r.headers["Content-Type"]
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
